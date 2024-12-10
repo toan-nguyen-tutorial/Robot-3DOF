@@ -1,0 +1,21 @@
+function drawCylinderBetweenPoints(ax, P0, P1, r, h, colr)
+    length = norm(P1(1:3) - P0(1:3));
+    [X, Y, Z] = cylinder(r, 100);  
+    Z = Z * length;  
+    direction = P1(1:3) - P0(1:3);
+    direction = direction / norm(direction); 
+    theta = acos(direction(3));  
+    phi = atan2(direction(2), direction(1));  
+    R = [cos(phi)*cos(theta) -sin(phi) cos(phi)*sin(theta);
+         sin(phi)*cos(theta) cos(phi) sin(phi)*sin(theta);
+         -sin(theta) 0 cos(theta)];
+    coords = R * [X(:)'; Y(:)'; Z(:)'];  
+    X_rot = reshape(coords(1, :), size(X));
+    Y_rot = reshape(coords(2, :), size(Y));
+    Z_rot = reshape(coords(3, :), size(Z));
+    X_rot = X_rot + P0(1);
+    Y_rot = Y_rot + P0(2);
+    Z_rot = Z_rot + P0(3);
+    surf(ax, X_rot, Y_rot, Z_rot, 'FaceColor', colr(1:3), 'EdgeColor', 'none');
+    fill3(ax, X_rot(1,:), Y_rot(1,:), Z_rot(1,:), colr(1:3), 'EdgeColor', '#000000');
+    fill3(ax, X_rot(2,:), Y_rot(2,:), Z_rot(2,:), colr(1:3), 'EdgeColor', 'none');
